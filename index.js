@@ -1,31 +1,43 @@
-const{
-    inserirAluno, listarAlunos, buscarPorRa, buscarPorNome, atualizarCurso, excluirPorRa,
+const {
+  inserirCurso, listarCursos,
+  inserirAluno, listarAlunos, listarAlunosDoCurso,
+  buscarPorRa, buscarPorNome, atualizarAluno, excluirPorRa,
 } = require('./supabase');
 
-async function main(){
-    try{
-
-        try{
-            const novo = await inserirAluno('Maria Silva', '2026001', 'ADS');
-            console.log('Inserido com sucesso:', novo);
-        } catch (e){
-            console.log('Não inseriu (talvez RA não exista):', e.message || e);
-        }
-
-        const todos = await listarAlunos();
-        console.log(um ?? 'Não encontrado');
-
-        const um = await buscarPorRa('2026001');
-        console.log(um ?? 'Não encontrado');
-
-        const atualizados = await atualizarCursos('2026001', 'Gestão Comercial');
-        console.log(atualizados);
-
-        const filtrados = await buscarPorNoem('Maria');
-        console.log(filtrados);
-    } catch (err){
-        console.error('ERRO GERAL:', err.message || err);
+async function main() {
+  try {
+    for (const nome of ['ADS', 'Gestão Comercial']) {
+      try {
+        await inserirCurso(nome);
+      } catch (e) {
+        console.log(`Curso "${nome}" não inserido (talvez já exista)`);
+      }
     }
+
+    const cursos = await listarCursos();
+    console.log('Cursos:', cursos);
+
+    const ads = cursos.find((c) => c.nome === 'ADS');
+    const gestao = cursos.find((c) => c.nome === 'Gestão Comercial');
+
+    try {
+      const novo = await inserirAluno('Maria Silva', '2026001', ads.id);
+      console.log('Inserido com sucesso:', novo);
+    } catch (e) {
+      console.log('Não inseriu (talvez RA já exista):', e.message || e);
+    }
+
+    const todos = await listarAlunos();
+    console.log(`Total: ${todos.length}`, todos);
+
+    await atualizarAluno('2026001', 'Maria Silva', gestao.id);
+
+    const daGestao = await listarAlunosDoCurso(gestao.id);
+    console.log('Alunos de Gestão Comercial:', daGestao);
+
+  } catch (err) {
+    console.error('ERRO GERAL:', err.message || err);
+  }
 }
 
-main();  
+main();     

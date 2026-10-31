@@ -1,0 +1,204 @@
+:root {
+  --bg: #f0f3f6;             /* fundo geral */
+  --surface: #ffffff;        /* cartões / painéis */
+  --ink: #1a2332;            /* texto principal */
+  --muted: #5c6b7a;          /* texto secundário */
+  --line: #d8e0e8;           /* bordas */
+  --primary: #0f6e56;        /* verde dos botões principais */
+  --danger: #b42318;         /* vermelho de excluir / erro */
+  --danger-soft: #fef3f2;    /* fundo suave de erro */
+  --ok-soft: #ecfdf3;        /* fundo suave de sucesso */
+}
+
+* {
+  box-sizing: border-box;    /* padding entra dentro da largura */
+}
+
+body {
+  margin: 0;                /* tira a margem branca padrão */
+  min-height: 100vh;        /* altura mínima = tela inteira */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--ink);        /* usa a variável --ink */
+  background: linear-gradient(180deg, #e7eef4 0%, var(--bg) 40%);
+}
+
+.app {
+  width: min(900px, calc(100% - 2rem)); /* no máx. 900px */
+  margin: 0 auto;           /* centraliza na horizontal */
+  padding: 2rem 0 3rem;
+}
+
+/* títulos e textos de apoio (complemento: o PDF não mostra estas regras) */
+h1, h2 { margin: 0; }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.1rem; }
+.subtitulo { margin: 0.25rem 0 0; color: var(--muted); }
+
+.topo {
+  display: flex;                 /* ativa o flexbox */
+  justify-content: space-between; /* título à esquerda, botão à direita */
+  align-items: flex-start;       /* alinha no topo */
+  gap: 1rem;                     /* espaço entre os filhos */
+}
+
+.painel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;      /* cantos arredondados */
+  overflow: hidden;
+  box-shadow: 0 8px 24px -18px rgba(26, 35, 50, 0.45);
+}
+
+/* cabeçalho de cada painel (complemento) */
+.painel-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.15rem;
+  border-bottom: 1px solid var(--line);
+}
+
+table { width: 100%; border-collapse: collapse; }
+
+th, td {
+  padding: 0.85rem 1.15rem;
+  border-bottom: 1px solid var(--line);
+}
+
+/* complemento: alinhamento das colunas e células de aviso */
+th { text-align: left; color: var(--muted); font-size: 0.85rem; }
+th.acoes, td.acoes { text-align: right; }
+td.vazio { text-align: center; color: var(--muted); }
+
+tbody tr:hover td {
+  background: #f8fbfc;       /* destaque ao passar o mouse */
+}
+
+.btn {                      /* base comum a todos os botões */
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.55rem 0.9rem;
+  cursor: pointer;          /* mãozinha ao passar o mouse */
+}
+
+.btn-primario {             /* + Novo aluno, Salvar */
+  background: var(--primary);
+  color: #fff;
+}
+
+.btn-secundario {           /* Atualizar, Cancelar */
+  background: #fff;
+  color: var(--ink);
+}
+.btn-perigo {               /* Excluir (vermelho suave) */
+  background: var(--danger-soft);
+  color: var(--danger);
+  border-color: #fecdca;
+}
+.btn-pequeno {              /* botões dentro da tabela */
+  padding: 0.3rem 0.6rem;
+  font-size: 0.85rem;
+}
+.btn:hover { border-color: var(--primary); }
+
+.msg {                      /* caixa de aviso padrão */
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+}
+
+.msg.ok {                   /* class="msg ok" no JS */
+  background: var(--ok-soft);
+  color: #067647;
+}
+
+.msg.erro {                 /* class="msg erro" */
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.msg[hidden] {
+  display: none !important; /* some de verdade da tela */
+}
+
+.modal {
+  position: fixed;             /* fixo na tela, mesmo com scroll */
+  inset: 0;                    /* top/right/bottom/left = 0 → cobre tudo */
+  z-index: 40;                 /* fica por cima do resto */
+  display: grid;
+  place-items: center;         /* centraliza a caixa */
+}
+
+.modal-fundo {
+  position: absolute;
+  inset: 0;
+  background: rgba(18, 28, 40, 0.45);     /* escurece o fundo */
+}
+
+.modal-caixa {
+  position: relative;       /* acima do fundo */
+  width: min(420px, 100%);
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.modal[hidden] { display: none !important; }
+
+/* botões do rodapé do modal (complemento) */
+.modal-acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+form { display: grid; gap: 0.85rem; }
+label { display: grid; gap: 0.35rem; font-weight: 600; }
+input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.65rem 0.75rem;
+}
+input:focus { border-color: var(--primary); }
+input:disabled { background: #f3f5f7; } /* RA na edição */
+
+@media (max-width: 640px) {                /* telas estreitas */
+  .topo, .painel-cabecalho {
+    flex-direction: column;                /* empilha em vez de lado a lado */
+    align-items: stretch;
+  }
+}
+
+.painel + .painel {                /* um painel logo depois de outro */
+  margin-top: 1.25rem;             /* espaço entre Cursos e Alunos */
+}
+
+.form-linha,
+.filtros {
+  display: flex;                   /* campo e botão lado a lado */
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-linha input { width: 220px; }
+.filtros select { width: auto; }
+
+input,
+select {                     /* o select ganha o mesmo visual do input */
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.65rem 0.75rem;
+  background: #fff;
+}
+
+/* frase embaixo da tabela de alunos: letra menor, cor apagada e uma linha em cima */
+.rolagem-status {
+  margin: 0;
+  padding: 0.85rem 1.15rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.85rem;
+  color: var(--muted);
+}
